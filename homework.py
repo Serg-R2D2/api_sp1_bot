@@ -11,11 +11,15 @@ load_dotenv()
 PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 <<<<<<< HEAD
+<<<<<<< HEAD
 CHAT_ID = os.getenv('CHAT_ID')
 print(CHAT_ID)
 =======
 CHAT_ID = '1131227628'
 >>>>>>> a21d7c7e032b564e6905b67329039fdcd7316f83
+=======
+CHAT_ID = os.getenv('CHAT_ID')
+>>>>>>> ecdbe12e6befab5d4cdaed2696cc19ae81d5725e
 
 YA_PRACTIKUM_URL = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
 BOT = telegram.Bot(token=TELEGRAM_TOKEN)
