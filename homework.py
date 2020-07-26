@@ -49,9 +49,8 @@ def get_homework_statuses(current_timestamp):
     return homework_statuses.json()
 
 
-def send_message(message):
-    return BOT.send_message(chat_id=CHAT_ID, text=message)
-
+def send_message(message): 
+    return BOT.send_message(chat_id=CHAT_ID, text=message) 
 
 def main():
     current_timestamp = int(time.time())  # начальное значение timestamp
