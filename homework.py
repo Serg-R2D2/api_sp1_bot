@@ -12,11 +12,21 @@ PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
-proxy_url='socks5://54.179.53.101:80'
-ya_p_url = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
+PROXY_URL='socks5://54.179.53.101:80'
+YA_PRACTIKUM_URL = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
+
+PROXY = telegram.utils.request.Request(proxy_url=PROXY_URL)
+BOT = telegram.Bot(token=TELEGRAM_TOKEN, request=PROXY)
 
 
 def parse_homework_status(homework):
+    everything_ok = (
+        homework['homework_name'] is not None 
+        and homework['status'] is not None 
+        and homework['status'] == 'rejected' or homework['status'] == 'approved'
+        )
+    if not everything_ok:
+        print('Неверный ответ сервера')
     homework_name = homework["homework_name"]
     if homework["status"] == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
@@ -26,20 +36,24 @@ def parse_homework_status(homework):
 
 
 def get_homework_statuses(current_timestamp):
+    if current_timestamp is None:
+        current_timestamp = int(time.time())
     headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
     data = {'from_date': current_timestamp}
     try:
-        homework_statuses = requests.get(ya_p_url, params=data, headers=headers)
-    except Exception as e:
+        homework_statuses = requests.get(
+            YA_PRACTIKUM_URL, 
+            params=data, 
+            headers=headers
+        )
+    except requests.exceptions.RequestException as e:
         logging.error(f'Error: {e}')
-        raise e
+        raise {}
     return homework_statuses.json()
 
 
 def send_message(message):
-    proxy = telegram.utils.request.Request(proxy_url=proxy_url)
-    bot = telegram.Bot(token=TELEGRAM_TOKEN, request=proxy)
-    return bot.send_message(chat_id=CHAT_ID, text=message)
+    return BOT.send_message(chat_id=CHAT_ID, text=message)
 
 
 def main():
@@ -54,15 +68,15 @@ def main():
                         new_homework.get('homeworks')[0])
                 )
             else:
-                print('Ничего нового')
+                send_message('Ничего нового')
             current_timestamp = new_homework.get('current_date')  # обновить timestamp
             if current_timestamp == None:
                 current_timestamp = int(time.time())
-            time.sleep(10)  # опрашивать раз в двадцать минут
+            time.sleep(660)  # опрашивать раз в двадцать минут
 
         except Exception as e:
             print(f'Бот упал с ошибкой: {e}')
-            time.sleep(5)
+            time.sleep(10)
             continue
 
 
