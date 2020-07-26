@@ -10,13 +10,10 @@ load_dotenv()
 
 PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
-CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+CHAT_ID = os.getenv('CHAT_ID')
 
-PROXY_URL='socks5://54.179.53.101:80'
 YA_PRACTIKUM_URL = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
-
-PROXY = telegram.utils.request.Request(proxy_url=PROXY_URL)
-BOT = telegram.Bot(token=TELEGRAM_TOKEN) #request=PROXY
+BOT = telegram.Bot(token=TELEGRAM_TOKEN)
 
 
 def parse_homework_status(homework):
@@ -51,10 +48,8 @@ def get_homework_statuses(current_timestamp):
         raise {}
     return homework_statuses.json()
 
-
 def send_message(message):
     return BOT.send_message(chat_id=CHAT_ID, text=message)
-
 
 def main():
     current_timestamp = int(time.time())  # начальное значение timestamp
@@ -67,8 +62,6 @@ def main():
                     parse_homework_status(
                         new_homework.get('homeworks')[0])
                 )
-            else:
-                send_message('Ничего нового')
             current_timestamp = new_homework.get('current_date')  # обновить timestamp
             time.sleep(660)  # опрашивать раз в 11 минут
 
