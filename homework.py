@@ -16,7 +16,7 @@ PROXY_URL='socks5://54.179.53.101:80'
 YA_PRACTIKUM_URL = 'https://praktikum.yandex.ru/api/user_api/homework_statuses/'
 
 PROXY = telegram.utils.request.Request(proxy_url=PROXY_URL)
-BOT = telegram.Bot(token=TELEGRAM_TOKEN, request=PROXY)
+BOT = telegram.Bot(token=TELEGRAM_TOKEN) #request=PROXY
 
 
 def parse_homework_status(homework):
