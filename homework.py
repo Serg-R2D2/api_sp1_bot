@@ -53,10 +53,12 @@ def main():
                     parse_homework_status(
                         new_homework.get('homeworks')[0])
                 )
+            else:
+                print('Ничего нового')
             current_timestamp = new_homework.get('current_date')  # обновить timestamp
             if current_timestamp == None:
                 current_timestamp = int(time.time())
-            time.sleep(1200)  # опрашивать раз в двадцать минут
+            time.sleep(10)  # опрашивать раз в двадцать минут
 
         except Exception as e:
             print(f'Бот упал с ошибкой: {e}')
