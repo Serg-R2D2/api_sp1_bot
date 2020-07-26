@@ -26,7 +26,7 @@ def parse_homework_status(homework):
         and homework['status'] == 'rejected' or homework['status'] == 'approved'
         )
     if not everything_ok:
-        print('Неверный ответ сервера')
+        send_message('Неверный ответ сервера')
     homework_name = homework["homework_name"]
     if homework["status"] == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
@@ -39,7 +39,7 @@ def get_homework_statuses(current_timestamp):
     if current_timestamp is None:
         current_timestamp = int(time.time())
     headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
-    data = {'from_date': current_timestamp}
+    data = {'from_date': 0}
     try:
         homework_statuses = requests.get(
             YA_PRACTIKUM_URL, 
@@ -70,8 +70,6 @@ def main():
             else:
                 send_message('Ничего нового')
             current_timestamp = new_homework.get('current_date')  # обновить timestamp
-            if current_timestamp == None:
-                current_timestamp = int(time.time())
             time.sleep(660)  # опрашивать раз в двадцать минут
 
         except Exception as e:
