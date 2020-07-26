@@ -39,7 +39,7 @@ def get_homework_statuses(current_timestamp):
     if current_timestamp is None:
         current_timestamp = int(time.time())
     headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
-    data = {'from_date': 0}
+    data = {'from_date': current_timestamp}
     try:
         homework_statuses = requests.get(
             YA_PRACTIKUM_URL, 
@@ -70,7 +70,7 @@ def main():
             else:
                 send_message('Ничего нового')
             current_timestamp = new_homework.get('current_date')  # обновить timestamp
-            time.sleep(660)  # опрашивать раз в двадцать минут
+            time.sleep(660)  # опрашивать раз в 11 минут
 
         except Exception as e:
             print(f'Бот упал с ошибкой: {e}')
