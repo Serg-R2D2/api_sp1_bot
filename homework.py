@@ -29,7 +29,6 @@ def parse_homework_status(homework):
     )
     if not is_status_correct or not is_keys_correct:
         logging.info('Неверный ответ сервера')
-        return 'Неверный ответ сервера'
     homework_name = homework["homework_name"]
     if homework["status"] == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
@@ -71,7 +70,7 @@ def main():
                         new_homework.get('homeworks')[0])
                 )
             current_timestamp = new_homework.get('current_date')  # обновить timestamp
-            time.sleep(60)  # опрашивать раз в 11 минут
+            time.sleep(660)  # опрашивать раз в 11 минут
             
         except Exception as e:
             print(f'Бот упал с ошибкой: {e}')
