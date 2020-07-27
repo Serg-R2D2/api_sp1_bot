@@ -17,13 +17,19 @@ BOT = telegram.Bot(token=TELEGRAM_TOKEN)
 
 
 def parse_homework_status(homework):
-    everything_ok = (
-        homework['homework_name'] is not None 
-        and homework['status'] is not None 
-        and homework['status'] == 'rejected' or homework['status'] == 'approved'
-        )
-    if not everything_ok:
-        send_message('Неверный ответ сервера')
+    homework_name = homework.get('homework_name')
+    homework_status = homework.get('status')
+    is_keys_correct = (
+        homework_name is not None 
+        and homework_status is not None
+    )
+    is_status_correct = (
+        homework_status == 'rejected' 
+        or homework['status'] == 'approved'
+    )
+    if not is_status_correct or not is_keys_correct:
+        logging.info('Неверный ответ сервера')
+        return 'Неверный ответ сервера'
     homework_name = homework["homework_name"]
     if homework["status"] == 'rejected':
         verdict = 'К сожалению в работе нашлись ошибки.'
@@ -45,7 +51,8 @@ def get_homework_statuses(current_timestamp):
         )
     except requests.exceptions.RequestException as e:
         logging.error(f'Error: {e}')
-        raise {}
+        return {}
+    print(homework_statuses.json())
     return homework_statuses.json()
 
 
@@ -64,7 +71,8 @@ def main():
                         new_homework.get('homeworks')[0])
                 )
             current_timestamp = new_homework.get('current_date')  # обновить timestamp
-            time.sleep(660)  # опрашивать раз в 11 минут
+            time.sleep(60)  # опрашивать раз в 11 минут
+            
         except Exception as e:
             print(f'Бот упал с ошибкой: {e}')
             time.sleep(10)
