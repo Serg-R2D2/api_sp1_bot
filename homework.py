@@ -69,11 +69,14 @@ def main():
                     parse_homework_status(
                         new_homework.get('homeworks')[0])
                 )
+            else:
+                send_message('Ничего нового...')
             current_timestamp = new_homework.get('current_date')  # обновить timestamp
             time.sleep(660)  # опрашивать раз в 11 минут
             
         except Exception as e:
             print(f'Бот упал с ошибкой: {e}')
+            send_message(f'Бот упал с ошибкой: {e}')
             time.sleep(10)
             continue
 
